@@ -29,7 +29,17 @@ public class UserController {
     final Gender GENDER = Gender.남;
     final Admin ADMIN = Admin.일반회원;
 
-    User user = User.builder()
+    User adminUser = User.builder()
+            .userEmail(EMAIL)
+            .userBirth(BIRTH)
+            .userNickname(NICKNAME)
+            .admin(ADMIN)
+            .gender(GENDER)
+            .userSequenceId(SEQUENCEID)
+            .roles(Collections.singletonList("ROLE_ADMIN")) // 최초 가입시 ADMIN 으로 설정
+            .build();
+
+    User normalUser = User.builder()
             .userEmail(EMAIL)
             .userBirth(BIRTH)
             .userNickname(NICKNAME)
@@ -42,11 +52,13 @@ public class UserController {
 
     @PostMapping("/join")
     public String join(){
+        System.out.println("fuck you!");
         log.info("로그인 시도됨");
 
-        userRepository.save(user); // User 를 저장
+        userRepository.save(normalUser); // Normal User 를 저장
+//        userRepository.save(adminUser); // Admin User 저장
 
-        return user.toString();
+        return normalUser.toString();
     }
 
     // 로그인
@@ -57,6 +69,6 @@ public class UserController {
         User member = userRepository.findByUserEmail(user.get("email"))
                 .orElseThrow(() -> new IllegalArgumentException("가입되지 않은 E-MAIL 입니다."));
 
-        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
+        return jwtTokenProvider.createToken(member.getUsername(), member.getRoles()); // userPK, user 역할을 넘긴다 (List 의 형태)
     }
 }

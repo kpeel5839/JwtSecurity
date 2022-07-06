@@ -96,5 +96,5 @@ public class User implements UserDetails { // UserDetails는 시큐리티가 관
     @Override
     public boolean isEnabled() {
         return true;
-    }
+    } // 필자가, UserDetails 와 User 를 분리하는 것을 싫어해서 그냥 해당 메소드들을 Overriding 함
 }
